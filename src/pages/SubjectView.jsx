@@ -12,7 +12,7 @@ import {
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-const SubjectView = ({ progress, setProgress }) => {
+const SubjectView = ({ progress, setProgress, addXP }) => {
     const { subjectId } = useParams();
     const subject = SUBJECTS_DATA.find(s => s.id === subjectId);
     const [activeTab, setActiveTab] = useState('notes'); // 'notes' or 'videos'
@@ -20,13 +20,20 @@ const SubjectView = ({ progress, setProgress }) => {
     if (!subject) return <div>Subject not found</div>;
 
     const toggleChapter = (chapterId) => {
+        const isCompleting = !progress[subjectId]?.[chapterId];
+        const chapter = subject.chapters.find(c => c.id === chapterId);
+
         setProgress(prev => ({
             ...prev,
             [subjectId]: {
                 ...(prev[subjectId] || {}),
-                [chapterId]: !(prev[subjectId]?.[chapterId])
+                [chapterId]: isCompleting
             }
         }));
+
+        if (isCompleting && chapter) {
+            addXP(chapter.xp || 50);
+        }
     };
 
     return (

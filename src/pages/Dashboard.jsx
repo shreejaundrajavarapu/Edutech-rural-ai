@@ -15,15 +15,6 @@ import {
 import { motion } from 'framer-motion';
 import FocusTools from '../components/FocusTools';
 // Mapping icons to names for the Subject Cards
-const addXP = (amount) => {
-    const updatedUser = {
-        ...user,
-        xp: (user.xp || 0) + amount,
-        // Let's also increase time learnt slightly as an example
-        timeLearnt: (user.timeLearnt || 0) + 0.1
-    };
-    setUser(updatedUser);
-};
 const ICON_MAP = {
     Calculator: Calculator,
     BookOpen: BookOpen,
@@ -108,7 +99,7 @@ const SubjectCard = ({ subject, progress }) => {
 };
 
 // Change this line (approx line 111 in your file)
-const Dashboard = ({ user, setUser, progress }) => {    // Dynamic Stats pull directly from the 'user' prop now
+const Dashboard = ({ user, setUser, progress, addXP }) => {    // Dynamic Stats pull directly from the 'user' prop now
     const stats = [
         { icon: Flame, label: "Daily Streak", value: user.streak || "0", color: "bg-orange-50 text-orange-600", unit: "days" },
         { icon: Trophy, label: "Experience", value: user.xp || "0", color: "bg-yellow-50 text-yellow-600", unit: "XP" },

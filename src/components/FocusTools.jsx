@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Timer, Calendar, Play, Pause, RotateCcw, Sparkles } from 'lucide-react';
 import { motion } from 'framer-motion';
 
-const FocusTools = ({ subjects }) => {
+const FocusTools = ({ subjects, onComplete }) => {
     // --- Pomodoro Logic ---
     const [seconds, setSeconds] = useState(25 * 60);
     const [isActive, setIsActive] = useState(false);
@@ -14,10 +14,11 @@ const FocusTools = ({ subjects }) => {
         } else if (seconds === 0) {
             clearInterval(interval);
             setIsActive(false);
-            alert("Focus session complete! Take a break.");
+            if (onComplete) onComplete();
+            alert("Focus session complete! Take a break. You earned 50 XP!");
         }
         return () => clearInterval(interval);
-    }, [isActive, seconds]);
+    }, [isActive, seconds, onComplete]);
 
     const formatTime = (s) => {
         const mins = Math.floor(s / 60);

@@ -4,7 +4,7 @@ import { SUBJECTS_DATA } from '../data/mockData';
 import { Trophy, ArrowLeft, CheckCircle2, XCircle, RefreshCcw, Star } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-const Quiz = ({ setProgress }) => {
+const Quiz = ({ setProgress, addXP }) => {
     const { subjectId } = useParams();
     const subject = SUBJECTS_DATA.find(s => s.id === subjectId);
 
@@ -15,10 +15,21 @@ const Quiz = ({ setProgress }) => {
     if (!subject) return <div>Subject not found</div>;
 
     const handleAnswer = (optionIdx) => {
-        setAnswers({ ...answers, [currentStep]: optionIdx });
+        const updatedAnswers = { ...answers, [currentStep]: optionIdx };
+        setAnswers(updatedAnswers);
         if (currentStep < subject.quiz.length - 1) {
             setCurrentStep(currentStep + 1);
         } else {
+            // Calculate final score and add XP
+            let score = 0;
+            subject.quiz.forEach((q, idx) => {
+                if (idx === currentStep) {
+                    if (optionIdx === q.correct) score++;
+                } else if (updatedAnswers[idx] === q.correct) {
+                    score++;
+                }
+            });
+            addXP(score * 20);
             setShowResult(true);
         }
     };
